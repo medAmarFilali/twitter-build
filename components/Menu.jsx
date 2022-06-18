@@ -11,12 +11,12 @@ import {
   DotsHorizontalIcon,
 } from "@heroicons/react/outline";
 import MenuItem from "./MenuItem";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
+import CommentDialog from "./CommentDialog";
 
 const Menu = () => {
   const { data: session } = useSession();
-
-  console.log("Session: ", session);
 
   return (
     <div className="flex flex-col justify-between space-y-4 h-[calc(100vh-16px)] ">
@@ -56,6 +56,9 @@ const Menu = () => {
           <PaperAirplaneIcon className="h-8 w-8" />
         </div>
       </div>
+      <div>
+        <CommentDialog />
+      </div>
       {/* Account */}
       <div>
         <div className="py-2 px-4 hover:bg-zinc-900 rounded-full mb-4 space-x-2 flex items-center justify-between cursor-pointer">
@@ -71,7 +74,10 @@ const Menu = () => {
               objectFit="contain"
             />
           </div>
-          <div className="flex-1 hidden md:block">
+          <div
+            className="flex-1 hidden md:block"
+            onClick={() => signOut({ callbackUrl: "/auth/signin" })}
+          >
             <h3 className="font-bold text-md truncate ">
               {session?.user?.name}
             </h3>

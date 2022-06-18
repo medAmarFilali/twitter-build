@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/outline";
 import Image from "next/image";
 
-const Tweet = () => {
+const Tweet = ({ tweet }) => {
   const [likeHover, setLikeHover] = useState(false);
   const [retweetHover, setRetweetHover] = useState(false);
   const [commentHover, setCommentHover] = useState(false);
@@ -18,18 +18,20 @@ const Tweet = () => {
     <div className="flex justify-between space-x-4 p-4 border-b-[1px] border-zinc-600">
       <div className="relative w-12 h-12 rounded-full overflow-hidden">
         <Image
-          src="/img/profile.jpg"
+          src={tweet.profileImg}
           layout="fill"
           objectFit="contain"
-          alt="Amar FILALI"
+          alt={tweet.usename}
         />
       </div>
       <div className="flex-1">
         <div className="flex justify-between items-center">
           <div className="flex-1">
             <div className="flex items-center">
-              <h3 className="font-bold text-md mr-2">Amar FILALI</h3>
-              <h5 className="font-thin text-md text-zinc-500">@amarfilali</h5>
+              <h3 className="font-bold text-md mr-2">{tweet.usename}</h3>
+              <h5 className="font-thin text-md text-zinc-500">
+                @{tweet.usename}
+              </h5>
             </div>
           </div>
           <div>
@@ -37,13 +39,17 @@ const Tweet = () => {
           </div>
         </div>
         <div className="flex-1">
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate
-            officia hic minima aliquam assumenda quam id sit alias quasi.
-            Doloremque similique repellendus laudantium nostrum obcaecati a
-            provident itaque, nam tenetur.
-          </p>
+          <p>{tweet.text}</p>
         </div>
+        {tweet.attachment && (
+          <div className="mt-8">
+            <img
+              src={tweet.attachment.file}
+              alt={tweet.usename}
+              className="rounded-xl"
+            />
+          </div>
+        )}
         <div className="mt-4 flex space-x-16 ">
           <div
             className="flex space-x-2 items-center text-zinc-500 cursor-pointer"

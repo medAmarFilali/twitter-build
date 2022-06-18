@@ -1,21 +1,35 @@
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { db } from "../firebase";
 import Tweet from "./Tweet";
 
 const Tweets = () => {
+  const [tweets, setTweets] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      query(collection(db, "tweets"), orderBy("timestamp", "desc")),
+      (snapshot) => {
+        const tweetsSnapshot = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setTweets(tweetsSnapshot);
+      }
+    );
+
+    return () => {
+      return unsubscribe();
+    };
+  }, [db]);
+
+  console.log("Tweets: ", tweets);
+
   return (
     <div>
-      <Tweet />
-      <Tweet />
-      <Tweet />
-      <Tweet />
-      <Tweet />
-      <Tweet />
-      <Tweet />
-      <Tweet />
-      <Tweet />
-      <Tweet />
-      <Tweet />
-      <Tweet />
-      <Tweet />
+      {tweets.map((tweet) => (
+        <Tweet key={tweet.id} tweet={tweet} />
+      ))}
     </div>
   );
 };
