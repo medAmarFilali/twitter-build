@@ -56,9 +56,6 @@ const Menu = () => {
           <PaperAirplaneIcon className="h-8 w-8" />
         </div>
       </div>
-      <div>
-        <CommentDialog />
-      </div>
       {/* Account */}
       <div>
         <div className="py-2 px-4 hover:bg-zinc-900 rounded-full mb-4 space-x-2 flex items-center justify-between cursor-pointer">

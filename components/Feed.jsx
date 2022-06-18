@@ -1,8 +1,12 @@
 import AddTweet from "./AddTweet";
 import Tweets from "./Tweets";
 import { SparklesIcon } from "@heroicons/react/outline";
+import CommentDialog from "./CommentDialog";
+import { useDispatch } from "react-redux";
 
 const Feed = () => {
+  const dispatch = useDispatch();
+
   return (
     <div>
       {/* Add Tweet  */}
@@ -19,6 +23,8 @@ const Feed = () => {
       <div>
         <Tweets />
       </div>
+      {/* Comment Dialog */}
+      <CommentDialog />
     </div>
   );
 };

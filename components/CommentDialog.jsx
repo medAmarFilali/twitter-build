@@ -1,29 +1,68 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { closeCommentDialog } from "../store/actions/commentDialogAction";
+import Image from "next/image";
+import { db } from "../firebase";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  serverTimestamp,
+} from "firebase/firestore";
+import { useSession } from "next-auth/react";
 
-export default function CommentDialog() {
-  let [isOpen, setIsOpen] = useState(true);
+const CommentDialog = () => {
+  const [tweet, setTweet] = useState({});
+  const [comment, setComment] = useState("");
+  const isOpen = useSelector((state) => state.commentDialog.isOpen);
+  const tweetId = useSelector((state) => state.commentDialog.id);
+  const { data: session } = useSession();
+  const dispatch = useDispatch();
 
-  function closeModal() {
-    setIsOpen(false);
-  }
+  const getTweet = async () => {
+    if (isOpen) {
+      const docRef = doc(db, "tweets", tweetId);
 
-  function openModal() {
-    setIsOpen(true);
-  }
+      const res = await getDoc(docRef);
+
+      const theTweet = {
+        id: res.id,
+        ...res.data(),
+      };
+
+      setTweet(theTweet);
+    }
+  };
+
+  useEffect(() => {
+    getTweet();
+  }, [isOpen]);
+
+  const closeModal = () => {
+    dispatch(closeCommentDialog());
+  };
+
+  const sendComment = async (e) => {
+    e.preventDefault();
+
+    const commentToSend = comment;
+    setComment("");
+
+    await addDoc(collection(db, "tweets", tweet.id, "comments"), {
+      comment: commentToSend,
+      username: session.user.username,
+      name: session.user.name,
+      userId: session.user.uid,
+      timestamp: serverTimestamp(),
+    });
+    closeModal();
+  };
 
   return (
     <>
-      <div className="fixed inset-0 flex items-center justify-center">
-        <button
-          type="button"
-          onClick={openModal}
-          className="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-        >
-          Open dialog
-        </button>
-      </div>
-
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
@@ -35,7 +74,7 @@ export default function CommentDialog() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
+            <div className="fixed inset-0 bg-white bg-opacity-10" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -49,27 +88,65 @@ export default function CommentDialog() {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
-                    Payment successful
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Your payment has been successfully submitted. We’ve sent
-                      you an email with all of the details of your order.
-                    </p>
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-black text-white p-6 text-left align-middle shadow-xl transition-all">
+                  {/* Tweet preview */}
+                  <div className="mt-2 flex justify-between space-x-4 ">
+                    <div className="relative h-12 w-12 rounded-full overflow-hidden">
+                      <Image
+                        src={
+                          tweet?.profileImg
+                            ? tweet.profileImg
+                            : "/img/account_placeholder.png"
+                        }
+                        layout="fill"
+                        objectFit="contain"
+                        alt={tweet.usename}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center">
+                        <h3 className="font-bold text-md mr-2">
+                          {tweet.usename}
+                        </h3>
+                        <h2 className="font-thing text-md text-zinc-500">
+                          @{tweet.usename}
+                        </h2>
+                      </div>
+                      <div className="flex-1">{tweet.text}</div>
+                    </div>
                   </div>
-
-                  <div className="mt-4">
+                  {/* Comment form */}
+                  <div className="flex justify-between items-center space-x-4 mt-8">
+                    <div className="relative h-12 w-12 rounded-full overflow-hidden">
+                      <Image
+                        src={
+                          session?.user?.image
+                            ? session.user.image
+                            : "/img/account_placeholder.png"
+                        }
+                        layout="fill"
+                        objectFit="contain"
+                        alt={session?.user?.name}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        className="w-full bg-black text-white focus:outline-none"
+                        placeholder="Tweet your reply"
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  {/* Submit button */}
+                  <div className="flex justify-end mt-8">
                     <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
+                      className="rounded-full bg-blue-600 disabled:bg-blue-200 hover:bg-blue-700 hover:disabled:bg-blue-200 p-2 w-32"
+                      disabled={!comment.trim()}
+                      onClick={sendComment}
                     >
-                      Got it, thanks!
+                      Reply
                     </button>
                   </div>
                 </Dialog.Panel>
@@ -80,4 +157,6 @@ export default function CommentDialog() {
       </Transition>
     </>
   );
-}
+};
+
+export default CommentDialog;

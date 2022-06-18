@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
 import Feed from "../components/Feed";
 import Menu from "../components/Menu";
 import Sidebar from "../components/Sidebar";

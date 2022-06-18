@@ -23,8 +23,6 @@ const Tweets = () => {
     };
   }, [db]);
 
-  console.log("Tweets: ", tweets);
-
   return (
     <div>
       {tweets.map((tweet) => (

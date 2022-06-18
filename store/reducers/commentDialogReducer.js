@@ -1,12 +1,16 @@
-import { TOGGLE_COMMENT_DIALOG } from "../actions/commentDialogAction";
+import {
+  CLOSE_COMMENT_DIALOG,
+  OPEN_COMMENT_DIALOG,
+} from "../actions/commentDialogAction";
 
-const initState = false;
+const initState = { isOpen: false };
 
 const commentDialogReducer = (state = initState, action) => {
   switch (action.type) {
-    case TOGGLE_COMMENT_DIALOG:
-      const newState = !state;
-      return newState;
+    case OPEN_COMMENT_DIALOG:
+      return action.payload;
+    case CLOSE_COMMENT_DIALOG:
+      return { isOpen: action.payload.isOpen, id: null };
     default:
       return state;
   }
