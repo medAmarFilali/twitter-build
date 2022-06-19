@@ -9,41 +9,35 @@ import {
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { openCommentDialog } from "../store/actions/commentDialogAction";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../firebase";
-import { comment } from "postcss";
+import { useRouter } from "next/router";
+import { getComments } from "../helpers/helpers";
+import { openLightLoading } from "../store/actions/loadingActions";
 
-const Tweet = ({ tweet }) => {
+const Tweet = ({ tweet, single }) => {
   const [comments, setComments] = useState([]);
   const [likeHover, setLikeHover] = useState(false);
   const [retweetHover, setRetweetHover] = useState(false);
   const [commentHover, setCommentHover] = useState(false);
   const [shareHover, setShareHover] = useState(false);
+  const router = useRouter();
   const dispatch = useDispatch();
 
-  const getComments = async () => {
-    await onSnapshot(
-      collection(db, "tweets", tweet.id, "comments"),
-      (snapshot) => {
-        const snapshotComments = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setComments(snapshotComments);
-      }
-    );
-  };
-
   useEffect(() => {
-    getComments();
+    getComments(tweet.id, setComments);
   }, []);
 
-  const handleCommentDialog = (id) => {
+  const handleCommentDialog = (e, id) => {
+    e.stopPropagation();
     dispatch(openCommentDialog(id));
   };
 
+  const openTweet = () => {
+    dispatch(openLightLoading());
+    router.push(`/comment/${tweet.id}`);
+  };
+
   return (
-    <div>
+    <div className="cursor-pointer" onClick={openTweet}>
       <div className="flex justify-between space-x-4 p-4 border-b-[1px] border-zinc-600">
         <div className="relative w-12 h-12 rounded-full overflow-hidden">
           <Image
@@ -79,12 +73,17 @@ const Tweet = ({ tweet }) => {
               />
             </div>
           )}
-          <div className="mt-4 flex space-x-16 ">
+          {/* Date section */}
+          {single && (
+            <div className="text-xs text-zinc-500 mt-4">{tweet.timestamp}</div>
+          )}
+          {/* Icons section */}
+          <div className={`${single ? "mt-1" : "mt-4"} flex space-x-16`}>
             <div
               className="flex space-x-2 items-center text-zinc-500 cursor-pointer"
               onMouseEnter={() => setCommentHover(true)}
               onMouseLeave={() => setCommentHover(false)}
-              onClick={() => handleCommentDialog(tweet.id)}
+              onClick={(e) => handleCommentDialog(e, tweet.id)}
             >
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center ${

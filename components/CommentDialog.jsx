@@ -9,7 +9,6 @@ import {
   collection,
   doc,
   getDoc,
-  onSnapshot,
   serverTimestamp,
 } from "firebase/firestore";
 import { useSession } from "next-auth/react";
@@ -56,6 +55,7 @@ const CommentDialog = () => {
       username: session.user.username,
       name: session.user.name,
       userId: session.user.uid,
+      profileImg: session.user.image,
       timestamp: serverTimestamp(),
     });
     closeModal();
@@ -64,7 +64,7 @@ const CommentDialog = () => {
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-50 " onClose={closeModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

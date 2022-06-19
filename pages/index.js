@@ -2,8 +2,11 @@ import Head from "next/head";
 import Feed from "../components/Feed";
 import Menu from "../components/Menu";
 import Sidebar from "../components/Sidebar";
+import { useSelector } from "react-redux";
+import LightLoading from "../components/LightLoading";
 
 export default function Home() {
+  const loading = useSelector((state) => state.loading);
   return (
     <div>
       <Head>
@@ -15,9 +18,9 @@ export default function Home() {
       <div className="bg-black text-white min-h-screen ">
         <div className="flex max-w-6xl mx-auto">
           {/* Menu */}
-          <secion className="w-18 md:w-[250px] pr-4 md:col-span-3 pt-4 border-r-[1px] border-zinc-700 fixed">
+          <section className="w-18 md:w-[250px] pr-4 md:col-span-3 pt-4 border-r-[1px] border-zinc-700 fixed">
             <Menu />
-          </secion>
+          </section>
           {/* Feed */}
           <section className="w-[600px] ml-20 md:ml-[250px] border-r-[1px] border-zinc-700">
             <Feed />
@@ -27,6 +30,9 @@ export default function Home() {
           <section className="w-[500px]">
             <Sidebar />
           </section>
+
+          {/* Loading */}
+          {loading.light && <LightLoading />}
         </div>
       </div>
     </div>
