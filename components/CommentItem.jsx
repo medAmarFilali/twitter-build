@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const CommentItem = ({ comment }) => {
   return (
-    <div className="flex justif-between border-b-[1px] border-zinc-600 px-4 py-2 space-x-4 ">
+    <div className="flex justif-between border-b-[1px] border-zinc-600 p-4 space-x-4 ">
       <div className="relative w-12 h-12 rounded-full overflow-hidden ">
         <Image
           src={comment.profileImg}

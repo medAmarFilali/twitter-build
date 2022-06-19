@@ -35,11 +35,10 @@ const Tweet = ({ tweet, single }) => {
     dispatch(openLightLoading());
     router.push(`/comment/${tweet.id}`);
   };
-
   return (
     <div className="cursor-pointer" onClick={openTweet}>
       <div className="flex justify-between space-x-4 p-4 border-b-[1px] border-zinc-600">
-        <div className="relative w-12 h-12 rounded-full overflow-hidden">
+        <div className="relative  w-12 h-12 rounded-full overflow-hidden">
           <Image
             src={tweet.profileImg}
             layout="fill"
@@ -65,11 +64,11 @@ const Tweet = ({ tweet, single }) => {
             <p>{tweet.text}</p>
           </div>
           {tweet.attachment && (
-            <div className="mt-8">
+            <div className="mt-8 w-full flex justify-center ">
               <img
                 src={tweet.attachment.file}
                 alt={tweet.usename}
-                className="rounded-xl"
+                className="rounded-xl w-full"
               />
             </div>
           )}
@@ -78,9 +77,13 @@ const Tweet = ({ tweet, single }) => {
             <div className="text-xs text-zinc-500 mt-4">{tweet.timestamp}</div>
           )}
           {/* Icons section */}
-          <div className={`${single ? "mt-1" : "mt-4"} flex space-x-16`}>
+          <div
+            className={`${
+              single ? "mt-1" : "mt-4"
+            } flex space-x-2 md:space-x-16`}
+          >
             <div
-              className="flex space-x-2 items-center text-zinc-500 cursor-pointer"
+              className="flex md:space-x-2 items-center text-zinc-500 cursor-pointer"
               onMouseEnter={() => setCommentHover(true)}
               onMouseLeave={() => setCommentHover(false)}
               onClick={(e) => handleCommentDialog(e, tweet.id)}
@@ -99,7 +102,7 @@ const Tweet = ({ tweet, single }) => {
               </p>
             </div>
             <div
-              className="flex space-x-2 items-center text-zinc-500 cursor-pointer"
+              className="flex md:space-x-2 items-center text-zinc-500 cursor-pointer"
               onMouseEnter={() => setRetweetHover(true)}
               onMouseLeave={() => setRetweetHover(false)}
             >
@@ -117,7 +120,7 @@ const Tweet = ({ tweet, single }) => {
               </p>
             </div>
             <div
-              className="flex space-x-2 items-center text-zinc-500 cursor-pointer"
+              className="flex md:space-x-2 items-center text-zinc-500 cursor-pointer"
               onMouseEnter={() => setLikeHover(true)}
               onMouseLeave={() => setLikeHover(false)}
             >
@@ -133,7 +136,7 @@ const Tweet = ({ tweet, single }) => {
               <p className={`text-sm ${likeHover && "text-pink-600"} `}>128</p>
             </div>
             <div
-              className="flex space-x-2 items-center text-zinc-500 cursor-pointer"
+              className="flex md:space-x-2 items-center text-zinc-500 cursor-pointer"
               onMouseEnter={() => setShareHover(true)}
               onMouseLeave={() => setShareHover(false)}
             >

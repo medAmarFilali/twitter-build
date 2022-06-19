@@ -12,8 +12,6 @@ import {
 } from "@heroicons/react/outline";
 import MenuItem from "./MenuItem";
 import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/router";
-import CommentDialog from "./CommentDialog";
 
 const Menu = () => {
   const { data: session } = useSession();
@@ -57,36 +55,38 @@ const Menu = () => {
         </div>
       </div>
       {/* Account */}
-      <div>
-        <div className="py-2 px-4 hover:bg-zinc-900 rounded-full mb-4 space-x-2 flex items-center justify-between cursor-pointer">
-          <div className="relative h-8 w-8 md:h-12 md:w-12 rounded-full overflow-hidden">
-            <Image
-              src={
-                session?.user?.image
-                  ? session.user.image
-                  : "/img/account_placeholder.png"
-              }
-              alt="Profile"
-              layout="fill"
-              objectFit="contain"
-            />
-          </div>
-          <div
-            className="flex-1 hidden md:block"
-            onClick={() => signOut({ callbackUrl: "/auth/signin" })}
-          >
-            <h3 className="font-bold text-md truncate ">
-              {session?.user?.name}
-            </h3>
-            <h3 className="text-sm text-zinc-400">
-              @{session?.user?.username}
-            </h3>
-          </div>
-          <div className="hidden md:block">
-            <DotsHorizontalIcon className="h-4 w-4" />
+      {session?.user && (
+        <div>
+          <div className="py-2 px-4 hover:bg-zinc-900 rounded-full mb-4 space-x-2 flex items-center justify-between cursor-pointer">
+            <div className="relative h-8 w-8 md:h-12 md:w-12 rounded-full overflow-hidden">
+              <Image
+                src={
+                  session?.user?.image
+                    ? session.user.image
+                    : "/img/account_placeholder.png"
+                }
+                alt="Profile"
+                layout="fill"
+                objectFit="contain"
+              />
+            </div>
+            <div
+              className="flex-1 hidden md:block"
+              onClick={() => signOut({ callbackUrl: "/auth/signin" })}
+            >
+              <h3 className="font-bold text-md truncate ">
+                {session?.user?.name}
+              </h3>
+              <h3 className="text-sm text-zinc-400">
+                @{session?.user?.username}
+              </h3>
+            </div>
+            <div className="hidden md:block">
+              <DotsHorizontalIcon className="h-4 w-4" />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

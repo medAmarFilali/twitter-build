@@ -4,6 +4,7 @@ import Menu from "../../components/Menu";
 import Sidebar from "../../components/Sidebar";
 import { db } from "../../firebase";
 import moment from "moment";
+import Layout from "../../components/Layout";
 
 export const getStaticPaths = async () => {
   const docRef = collection(db, "tweets");
@@ -44,20 +45,13 @@ export async function getStaticProps({ params }) {
 
 const comment = ({ tweet }) => {
   return (
-    <div className="text-white bg-black min-h-screen ">
-      <div className="flex max-w-6xl mx-auto">
-        <section className="w-18 md:w-[250px] pr-4 md:col-span-3 pt-4 border-r-[1px] border-zinc-700 fixed">
-          <Menu />
-        </section>
+    <>
+      <Layout>
         <section className="w-[600px] ml-20 md:ml-[250px] border-r-[1px] border-zinc-700">
           <CommentPage tweet={tweet} />
         </section>
-        {/* Sidebase */}
-        <section className="w-[500px]">
-          <Sidebar />
-        </section>
-      </div>
-    </div>
+      </Layout>
+    </>
   );
 };
 
