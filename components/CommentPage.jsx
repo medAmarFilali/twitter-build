@@ -19,7 +19,7 @@ const CommentPage = ({ tweet }) => {
   }, []);
 
   return (
-    <div className="w-[600px]">
+    <div className="w-full md:w-[600px]">
       {/* Comment Dialog */}
       <CommentDialog />
       {/* Feed header */}
