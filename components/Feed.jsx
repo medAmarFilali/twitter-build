@@ -8,7 +8,7 @@ const Feed = () => {
   const { data: session } = useSession();
 
   return (
-    <div>
+    <div className="w-full">
       {/* Add Tweet  */}
       <div className="fixed w-full md:w-[600px] z-50 top-0">
         <div className="flex items-center justify-between backdrop-blur-sm bg-black/30 h-12 border-x-[1px] border-zinc-700 px-4">
@@ -23,7 +23,7 @@ const Feed = () => {
         </div>
       )}
       {/* Tweets */}
-      <div className={!session?.user && "mt-16 w:full md:w-[600px]"}>
+      <div className={!session?.user ? "mt-16 w:full md:w-[600px]" : ""}>
         <Tweets />
       </div>
       {/* Comment Dialog */}
