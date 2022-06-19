@@ -5,10 +5,10 @@ const Landing = ({ providers }) => {
   return (
     <div className="bg-black text-white min-h-screen">
       <div className="w-full flex ">
-        <div className="w-1/2">
+        <div className="hidden md:inline-flex">
           <div className="w-full min-h-screen bg-[url('/img/landing_background.png')] "></div>
         </div>
-        <div className="w-1/2 p-8">
+        <div className="w-full md:w-1/2 p-8">
           <div className="relative w-12 h-12 ">
             <Image
               src="/img/logo.png"
@@ -19,7 +19,8 @@ const Landing = ({ providers }) => {
           </div>
           <div className="mt-24">
             <h1 className="text-7xl">
-              It{"'"}s happening <br /> here{" "}
+              It{"'"}s happening here
+              <br /> here{" "}
             </h1>
             <h2 className="text-4xl mt-8">Join twitter now</h2>
             <div className="mt-8">
